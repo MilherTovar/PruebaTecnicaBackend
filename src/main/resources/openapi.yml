@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Prueba Técnica
+  description: |-
+    Prueba Técnica que consiste en una Api que consume un EndPoint para consultar datos de precios de una memoria de trabajo (h2).
+    
+    La entrada son los siguintes parámetros: Fecha de aplicación, identificador del producto e indentificación de la cadena. la sálida es la siguiente estructura de datos: identificador de producto, identificador de cadena, tarifa a aplicar, fechas de aplicación y precio final a aplicar
+  contact:
+    email: apiteam@swagger.io
+    name: Milher Fabián Tovar Rubiano
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080{basePath}
+    variables:
+      basePath:
+        default: /precios/v1
+tags:
+  - name: precios
+    description: Busqueda de precios por fecha de aplicación, cadena y producto
+paths:
+  /precios/busquedaPrecios:
+    get:
+      tags:
+        - precios
+      summary: Busqueda de precios por fecha de aplicación, cadena y por producto
+      description: Busqueda de precios por fecha de aplicación, cadena y por producto
+      operationId: busquedaPrecios
+      parameters:
+        - name: fechaAplicacion
+          in: query
+          description: Fecha Aplicacion
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: cadenaId
+          in: query
+          description: Cadena del producto
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productoId
+          in: query
+          description: Id del producto
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/preciosDTO'
+        '400':
+          description: Precios no encontrados
+components:
+  schemas:
+    preciosDTO:
+      type: object
+      properties:
+        productoId:
+          type: integer
+          format: int64
+          example: 35455
+        cadenaId:
+          type: integer
+          format: int64
+          example: 1
+        tarifa:
+          type: number
+          format: double
+        fecha:
+          type: string
+          format: datetime
+        precio:
+          type: number
+          format: double
